@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAHOSHUVA: ORIGIN ZERO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- AUDIO: Atmospheric ambient sound (Web Audio API generated) -->
+    <div id="click-to-start" class="click-overlay">
+        <div class="click-prompt">
+            <div class="click-icon">▶</div>
+            <div class="click-text">CLICK TO BEGIN</div>
+        </div>
+    </div>
+
+    <!-- CINEMATIC OPENING SEQUENCE -->
+    <div id="game-container">
+        <!-- Phase 1: Total Darkness with particles -->
+        <canvas id="particle-canvas"></canvas>
+
+        <!-- Phase 2: Mountain landscape silhouette -->
+        <div id="landscape-layer">
+            <svg id="mountain-svg" viewBox="0 0 1920 400" preserveAspectRatio="none">
+                <!-- Distant mountains (Hassanabad inspired) -->
+                <defs>
+                    <linearGradient id="sky-gradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#0a0a1a"/>
+                        <stop offset="40%" stop-color="#1a1a3e"/>
+                        <stop offset="70%" stop-color="#2d1b4e"/>
+                        <stop offset="100%" stop-color="#4a2040"/>
+                    </linearGradient>
+                    <linearGradient id="mountain-far" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#1a1a3e"/>
+                        <stop offset="100%" stop-color="#0d0d20"/>
+                    </linearGradient>
+                    <linearGradient id="mountain-mid" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#15152e"/>
+                        <stop offset="100%" stop-color="#0a0a18"/>
+                    </linearGradient>
+                    <linearGradient id="mountain-near" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#0f0f22"/>
+                        <stop offset="100%" stop-color="#050510"/>
+                    </linearGradient>
+                    <filter id="mountain-glow">
+                        <feGaussianBlur stdDeviation="2" result="blur"/>
+                        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                    </filter>
+                </defs>
+                <!-- Far mountain range -->
+                <path d="M0,350 L100,320 L200,280 L320,200 L400,170 L480,140 L560,120 L640,100 L700,80 L760,70 L820,85 L880,110 L940,95 L1000,80 L1060,100 L1120,130 L1180,110 L1240,140 L1300,170 L1380,200 L1460,250 L1540,280 L1620,300 L1720,320 L1820,340 L1920,350 L1920,400 L0,400 Z" 
+                      fill="url(#mountain-far)" opacity="0.6" filter="url(#mountain-glow)"/>
+                <!-- Mid mountain (main peak - Hassanabad) -->
+                <path d="M0,380 L200,360 L400,340 L500,300 L600,250 L680,200 L740,160 L800,130 L850,110 L900,95 L940,80 L970,72 L1000,80 L1040,95 L1080,120 L1120,145 L1180,170 L1240,200 L1320,240 L1400,280 L1500,310 L1600,340 L1720,360 L1920,380 L1920,400 L0,400 Z" 
+                      fill="url(#mountain-mid)" opacity="0.8"/>
+                <!-- Near foothills and farmland -->
+                <path d="M0,395 L100,390 L300,385 L500,380 L700,375 L900,370 L1000,372 L1100,375 L1300,380 L1500,385 L1700,390 L1920,395 L1920,400 L0,400 Z" 
+                      fill="url(#mountain-near)"/>
+            </svg>
+            <!-- Horizon glow -->
+            <div id="horizon-glow"></div>
+        </div>
+
+        <!-- Phase 3: Title Reveal -->
+        <div id="title-container">
+            <div id="title-pre" class="title-element">—— A LIFE RPG ——</div>
+            <div id="title-main" class="title-element">
+                <span class="title-name">YAHOSHUVA</span>
+            </div>
+            <div id="title-sub" class="title-element">
+                <span class="title-origin">ORIGIN</span>
+                <span class="title-separator">:</span>
+                <span class="title-zero">ZERO</span>
+            </div>
+            <div id="title-tagline" class="title-element">Every legend has a beginning.</div>
+            <div id="title-line-left" class="title-line"></div>
+            <div id="title-line-right" class="title-line"></div>
+        </div>
+
+        <!-- Phase 4: Press to begin -->
+        <div id="start-prompt">
+            <div class="prompt-text">PRESS ANY KEY TO BEGIN</div>
+            <div class="prompt-line"></div>
+        </div>
+
+        <!-- Atmospheric overlay effects -->
+        <div id="vignette"></div>
+        <div id="film-grain"></div>
+        <div id="lens-flare"></div>
+    </div>
+
+    <script src="opening.js"></script>
+</body>
+</html>
