@@ -283,6 +283,23 @@ html, body {
     letter-spacing: 6px;
     color: rgba(201, 168, 76, 0.4);
     margin-bottom: 16px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Voice indicator — pulsing waveform bars next to NARRATOR label */
+.narrator-label::after {
+    content: '🔊';
+    font-size: 12px;
+    animation: speakerPulse 1.5s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+@keyframes speakerPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.15); }
 }
 
 .narrator-text {

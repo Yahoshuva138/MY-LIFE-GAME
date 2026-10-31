@@ -1,25 +1,29 @@
 /* ═══════════════════════════════════════════════════════════════
    YAHOSHUVA: ORIGIN ZERO — Storyline 01 Engine
-   Cinematic Scene-by-Scene Visual Novel Controller
+   WITH FULL VOICE NARRATION & MOTIVATIONAL BACKGROUND AUDIO
+   
+   Voice System:
+   ─────────────
+   • Web Speech API narrates every text scene
+   • Deep, slow, clear delivery (rate 0.72, pitch 0.85)
+   • Words spoken in sync with typewriter text
+   • Peter Dinklage motivational speech plays as atmospheric BG
+   • Background audio fades during narration, rises between scenes
    ═══════════════════════════════════════════════════════════════ */
 
-// ── Scene Data ──
-// Each scene defines: background image, overlay darkness, Ken Burns style,
-// whether it has typewriter text, audio cues, and special behaviors.
+// ── Scene Configuration ──
 const SCENE_DATA = [
     // 0 — STORYLINE TITLE CARD
     {
         bg: null,
         overlay: 'full-black',
         kenBurns: null,
-        audio: null,
         autoAdvance: 4000,
     },
     // 1 — BLACK / HEARTBEAT
     {
         bg: null,
         overlay: 'full-black',
-        kenBurns: null,
         audio: 'heartbeat',
         autoAdvance: 5500,
         special: 'heartbeat',
@@ -29,15 +33,14 @@ const SCENE_DATA = [
         bg: 'https://images.openai.com/static-rsc-4/NlH-cNKwyx5i7-Af__xSZZnSNTVy10tcILWTqc6dX0XjZ1nF5rPHKv2WEvRxUr-HiFdlBf14R33eN5qk2ZmaeoeSdBzv-t-fPy8tUeujh84aSIrgI6Qls0uF0gRt-LkAexjOO9B1AlpDApWlwGmEqooVP_9Fj3-SxrSBWblw0is?purpose=inline',
         overlay: 'darkest',
         kenBurns: 'ken-burns-in',
-        audio: null,
     },
     // 3 — NARRATOR 1 (Every legend...)
     {
         bg: 'https://images.openai.com/static-rsc-4/YXKfW5aepiuCaVK-pyMSLtO4iiNaOf75ovEQIIwEd3a49SzfJWoMaEJTahx7IEBdYKnTn0eI323hxN6zvUz9QnudrK17CfzBT5zfylCBOcg4Mfc-DrNrSRVVjZrk9GQf-1jkN73lZTeRMKsn02pBk4UUa_Af8qzIfn9U_0giyTQ?purpose=inline',
         overlay: 'darker',
         kenBurns: 'ken-burns-left',
-        audio: null,
         typewriter: true,
+        speak: 'Every legend has a beginning. ... Some begin in kingdoms. Some begin in extraordinary places. ... But this one began in a small town, surrounded by ordinary people, simple moments, and an unknown future.',
     },
     // 4 — NARRATOR 2 (13 March 2007)
     {
@@ -46,6 +49,7 @@ const SCENE_DATA = [
         kenBurns: 'ken-burns-out',
         audio: 'birth',
         typewriter: true,
+        speak: 'Thirteenth of March, Two Thousand and Seven. ... A new life entered the world.',
     },
     // 5 — CHAPTER 01 CARD
     {
@@ -60,6 +64,7 @@ const SCENE_DATA = [
         overlay: 'darker',
         kenBurns: 'ken-burns-right',
         typewriter: true,
+        speak: 'The story begins with two places. ... Hassanabad. The native village, where the roots of this story belong. ... Sattenapalli. The nearby town where Yahoshuva was born, because there was no hospital in Hassanabad.',
     },
     // 7 — CH01 TEXT 2 (One beginning)
     {
@@ -67,6 +72,7 @@ const SCENE_DATA = [
         overlay: 'darker',
         kenBurns: 'ken-burns-left',
         typewriter: true,
+        speak: 'After his birth, his family shifted to Sattenapalli. ... Two places. One beginning. ... One would represent his roots. The other would become the setting for the next chapter of his early life.',
     },
     // 8 — CHAPTER 02 CARD
     {
@@ -81,6 +87,7 @@ const SCENE_DATA = [
         overlay: 'darker',
         kenBurns: 'ken-burns-out',
         typewriter: true,
+        speak: 'The world was still simple. ... No legendary quests. No powerful weapons. No massive open worlds. ... Just childhood, family, curiosity, and little moments that would eventually become memories.',
     },
     // 10 — CH02 TEXT 2 (Every great adventure)
     {
@@ -88,12 +95,12 @@ const SCENE_DATA = [
         overlay: 'darker',
         kenBurns: 'ken-burns-in',
         typewriter: true,
+        speak: 'The future protagonist had no idea what was waiting ahead. ... But every great adventure begins, before the hero knows they are part of one.',
     },
     // 11 — SYSTEM AWAKENS
     {
         bg: null,
         overlay: 'full-black',
-        kenBurns: null,
         audio: 'system',
         special: 'system',
     },
@@ -101,17 +108,14 @@ const SCENE_DATA = [
     {
         bg: null,
         overlay: 'full-black',
-        kenBurns: null,
-        audio: null,
         special: 'playercard',
     },
     // 13 — SYSTEM MESSAGE
     {
         bg: null,
         overlay: 'full-black',
-        kenBurns: null,
-        audio: null,
         typewriter: true,
+        speak: 'Your journey has been initialized. ... Your past contains memories. Your future contains possibilities. ... The first chapter begins now.',
     },
     // 14 — ENDING NARRATION
     {
@@ -119,19 +123,234 @@ const SCENE_DATA = [
         overlay: 'darker',
         kenBurns: 'ken-burns-right',
         typewriter: true,
+        speak: 'He didn\'t know what life had planned for him. He didn\'t know about the challenges, failures, friendships, victories, or worlds he would discover. ... He was just beginning. ... And this, was only, Level One.',
     },
     // 15 — END CARD
     {
         bg: 'https://images.openai.com/static-rsc-4/GzeA6lJLJqbFTwxQNkOzYN3x03J3jvpvzh36MnqrWzum8jmhksSUuBk7KPKLyBnhnGaKnYOftwgwiCLs5-PBu7uCa0ziypNDGbvIg8PxR6_2jIdOFSNfRIIAcOal94MdQBCFHouBNiWC3N6pej6tvA3InoVwuwWWLfzVx3hyKgM?purpose=inline',
         overlay: 'darkest',
         kenBurns: 'ken-burns-out',
-        audio: null,
     },
 ];
 
 
-// ── Audio Engine ──
-class StoryAudio {
+// ═══════════════════════════════════════════════════════
+// NARRATOR VOICE ENGINE (Web Speech API)
+// Delivers deep, slow, clear motivational narration
+// ═══════════════════════════════════════════════════════
+class NarratorVoice {
+    constructor() {
+        this.synth = window.speechSynthesis;
+        this.voice = null;
+        this.isSpeaking = false;
+        this.currentUtterance = null;
+        this.onEndCallback = null;
+        this._voiceReady = false;
+        this._initVoices();
+    }
+
+    _initVoices() {
+        // Voices load asynchronously in most browsers
+        const loadVoices = () => {
+            const voices = this.synth.getVoices();
+            if (voices.length === 0) return;
+
+            // Priority: deep male English voices
+            // Prefer: Google UK English Male, Microsoft David, Microsoft Mark, 
+            //         any male en-US / en-GB voice
+            const priorities = [
+                'Google UK English Male',
+                'Microsoft David Desktop',
+                'Microsoft David',
+                'Microsoft Mark',
+                'Google US English',
+                'Microsoft Zira',       // fallback female if no male
+                'Alex',                 // macOS
+                'Daniel',               // macOS British
+                'Samantha',             // macOS fallback
+            ];
+
+            // Try priority list first
+            for (const name of priorities) {
+                const found = voices.find(v => v.name.includes(name));
+                if (found) {
+                    this.voice = found;
+                    break;
+                }
+            }
+
+            // Fallback: first English voice
+            if (!this.voice) {
+                this.voice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+            }
+
+            this._voiceReady = true;
+            console.log('[NARRATOR] Voice loaded:', this.voice?.name);
+        };
+
+        loadVoices();
+        if (this.synth.onvoiceschanged !== undefined) {
+            this.synth.onvoiceschanged = loadVoices;
+        }
+
+        // Some browsers need a short delay
+        setTimeout(loadVoices, 500);
+        setTimeout(loadVoices, 1500);
+    }
+
+    /**
+     * Speak text with deep, slow, motivational delivery.
+     * Uses "..." in the text as pause markers (0.8s pauses).
+     * Returns a Promise that resolves when speech finishes.
+     */
+    speak(text) {
+        return new Promise(async (resolve) => {
+            if (!this.synth || !text) { resolve(); return; }
+
+            // Cancel any ongoing speech
+            this.synth.cancel();
+
+            // Split on "..." for dramatic pauses
+            const segments = text.split('...').map(s => s.trim()).filter(s => s.length > 0);
+
+            for (let i = 0; i < segments.length; i++) {
+                await this._speakSegment(segments[i]);
+                // Dramatic pause between segments
+                if (i < segments.length - 1) {
+                    await this._pause(900);
+                }
+            }
+
+            this.isSpeaking = false;
+            resolve();
+        });
+    }
+
+    _speakSegment(text) {
+        return new Promise((resolve) => {
+            const utterance = new SpeechSynthesisUtterance(text);
+
+            // Deep, slow, clear, motivational voice settings
+            utterance.rate = 0.72;      // Slow and deliberate
+            utterance.pitch = 0.85;     // Deep tone
+            utterance.volume = 1.0;     // Full volume
+            if (this.voice) utterance.voice = this.voice;
+
+            this.isSpeaking = true;
+            this.currentUtterance = utterance;
+
+            utterance.onend = () => {
+                this.currentUtterance = null;
+                resolve();
+            };
+
+            utterance.onerror = (e) => {
+                console.warn('[NARRATOR] Speech error:', e.error);
+                this.currentUtterance = null;
+                resolve();
+            };
+
+            // Chrome bug workaround: resume synthesis if paused
+            this.synth.cancel();
+            setTimeout(() => {
+                this.synth.speak(utterance);
+            }, 50);
+
+            // Chrome has a bug where long utterances stop after ~15s
+            // Keep-alive ping to prevent that
+            this._keepAlive();
+        });
+    }
+
+    _pause(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    _keepAlive() {
+        // Chrome pauses speech synthesis after ~15s without interaction.
+        // This periodic resume/pause prevents that.
+        if (this._keepAliveTimer) clearInterval(this._keepAliveTimer);
+        this._keepAliveTimer = setInterval(() => {
+            if (this.synth.speaking && !this.synth.paused) {
+                this.synth.pause();
+                this.synth.resume();
+            } else {
+                clearInterval(this._keepAliveTimer);
+            }
+        }, 10000);
+    }
+
+    stop() {
+        this.synth.cancel();
+        this.isSpeaking = false;
+        if (this._keepAliveTimer) clearInterval(this._keepAliveTimer);
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════
+// BACKGROUND MUSIC (extracted motivational speech audio)
+// Plays quietly, ducks when narrator speaks
+// ═══════════════════════════════════════════════════════
+class BackgroundMusic {
+    constructor() {
+        this.audio = new Audio('AUDIO/motivational_bg.mp3');
+        this.audio.loop = true;
+        this.audio.volume = 0;
+        this.targetVolume = 0.12;   // Quiet atmospheric layer
+        this.duckVolume = 0.03;     // Ducked during narration
+        this.fadeInterval = null;
+    }
+
+    start() {
+        this.audio.play().catch(() => {
+            // Autoplay blocked — will start on next user interaction
+            const handler = () => {
+                this.audio.play();
+                document.removeEventListener('click', handler);
+                document.removeEventListener('keydown', handler);
+            };
+            document.addEventListener('click', handler);
+            document.addEventListener('keydown', handler);
+        });
+        this._fadeTo(this.targetVolume, 3000);
+    }
+
+    // Duck the music when narrator speaks
+    duck() {
+        this._fadeTo(this.duckVolume, 800);
+    }
+
+    // Raise music between narration
+    unduck() {
+        this._fadeTo(this.targetVolume, 1200);
+    }
+
+    _fadeTo(target, duration) {
+        if (this.fadeInterval) clearInterval(this.fadeInterval);
+        const steps = 30;
+        const stepTime = duration / steps;
+        const stepSize = (target - this.audio.volume) / steps;
+        let step = 0;
+
+        this.fadeInterval = setInterval(() => {
+            step++;
+            this.audio.volume = Math.max(0, Math.min(1,
+                this.audio.volume + stepSize
+            ));
+            if (step >= steps) {
+                clearInterval(this.fadeInterval);
+                this.audio.volume = target;
+            }
+        }, stepTime);
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════
+// SOUND EFFECTS ENGINE
+// ═══════════════════════════════════════════════════════
+class SFXEngine {
     constructor() {
         this.ctx = null;
         this.masterGain = null;
@@ -146,11 +365,8 @@ class StoryAudio {
         this.masterGain.connect(this.ctx.destination);
     }
 
-    // Ambient drone for background
     startAmbient() {
         const t = this.ctx.currentTime;
-
-        // Deep pad
         [55, 82.5, 110].forEach((freq, i) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
@@ -161,13 +377,10 @@ class StoryAudio {
             filter.frequency.setValueAtTime(300, t);
             gain.gain.setValueAtTime(0, t);
             gain.gain.linearRampToValueAtTime(0.04 / (i + 1), t + 5);
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(this.masterGain);
+            osc.connect(filter); filter.connect(gain); gain.connect(this.masterGain);
             osc.start();
             this.droneNodes.push({ osc, gain });
         });
-
         // Wind
         const bufSize = this.ctx.sampleRate * 4;
         const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
@@ -184,10 +397,9 @@ class StoryAudio {
         src.start();
     }
 
-    // Heartbeat
     playHeartbeat() {
         const t = this.ctx.currentTime;
-        const playBeat = (offset) => {
+        const beat = (offset) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sine';
@@ -198,14 +410,9 @@ class StoryAudio {
             osc.connect(gain); gain.connect(this.masterGain);
             osc.start(t + offset); osc.stop(t + offset + 0.5);
         };
-        // Double-beat pattern
-        playBeat(0); playBeat(0.2);
-        playBeat(1.2); playBeat(1.4);
-        playBeat(2.4); playBeat(2.6);
-        playBeat(3.6); playBeat(3.8);
+        [0, 0.2, 1.2, 1.4, 2.4, 2.6, 3.6, 3.8].forEach(beat);
     }
 
-    // Birth moment — gentle chime
     playBirthChime() {
         const t = this.ctx.currentTime;
         [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
@@ -221,7 +428,6 @@ class StoryAudio {
         });
     }
 
-    // Chapter reveal — low rumble
     playChapterReveal() {
         const t = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
@@ -235,10 +441,8 @@ class StoryAudio {
         osc.start(t); osc.stop(t + 3.5);
     }
 
-    // System boot — digital
     playSystemBoot() {
         const t = this.ctx.currentTime;
-        // Digital beeps
         [800, 1000, 800, 1200, 600].forEach((freq, i) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
@@ -256,18 +460,17 @@ class StoryAudio {
 }
 
 
-// ── Typewriter Engine ──
+// ═══════════════════════════════════════════════════════
+// TYPEWRITER ENGINE
+// ═══════════════════════════════════════════════════════
 class Typewriter {
     constructor() {
         this.isTyping = false;
         this.skipRequested = false;
-        this.resolve = null;
     }
 
-    // Type HTML content character by character, preserving tags
     async type(element, speed = 28) {
         return new Promise((resolve) => {
-            this.resolve = resolve;
             this.isTyping = true;
             this.skipRequested = false;
 
@@ -275,19 +478,16 @@ class Typewriter {
             element.setAttribute('data-full-html', fullHTML);
             element.innerHTML = '';
 
-            // Add cursor
             const cursor = document.createElement('span');
             cursor.className = 'typewriter-cursor';
             element.appendChild(cursor);
 
-            // Parse HTML to extract text and tags
             const segments = this._parseHTML(fullHTML);
             let currentHTML = '';
             let segIndex = 0;
 
             const typeNext = () => {
                 if (this.skipRequested || segIndex >= segments.length) {
-                    // Complete immediately
                     element.innerHTML = fullHTML;
                     cursor.classList.add('hidden');
                     element.appendChild(cursor);
@@ -300,7 +500,7 @@ class Typewriter {
                 if (seg.type === 'tag') {
                     currentHTML += seg.content;
                     segIndex++;
-                    typeNext(); // tags appear instantly
+                    typeNext();
                 } else {
                     currentHTML += seg.content;
                     segIndex++;
@@ -315,9 +515,7 @@ class Typewriter {
     }
 
     skip() {
-        if (this.isTyping) {
-            this.skipRequested = true;
-        }
+        if (this.isTyping) this.skipRequested = true;
     }
 
     _parseHTML(html) {
@@ -325,28 +523,23 @@ class Typewriter {
         let i = 0;
         while (i < html.length) {
             if (html[i] === '<') {
-                // Find closing >
                 const end = html.indexOf('>', i);
                 if (end !== -1) {
                     segments.push({ type: 'tag', content: html.substring(i, end + 1) });
                     i = end + 1;
                 } else {
-                    segments.push({ type: 'char', content: html[i] });
-                    i++;
+                    segments.push({ type: 'char', content: html[i] }); i++;
                 }
             } else if (html[i] === '&') {
-                // HTML entity
                 const end = html.indexOf(';', i);
                 if (end !== -1 && end - i < 10) {
                     segments.push({ type: 'char', content: html.substring(i, end + 1) });
                     i = end + 1;
                 } else {
-                    segments.push({ type: 'char', content: html[i] });
-                    i++;
+                    segments.push({ type: 'char', content: html[i] }); i++;
                 }
             } else {
-                segments.push({ type: 'char', content: html[i] });
-                i++;
+                segments.push({ type: 'char', content: html[i] }); i++;
             }
         }
         return segments;
@@ -354,18 +547,22 @@ class Typewriter {
 }
 
 
-// ── Main Story Engine ──
+// ═══════════════════════════════════════════════════════
+// MAIN STORY ENGINE (orchestrates everything)
+// ═══════════════════════════════════════════════════════
 class StoryEngine {
     constructor() {
         this.currentScene = -1;
         this.totalScenes = SCENE_DATA.length;
-        this.audio = new StoryAudio();
+        this.sfx = new SFXEngine();
+        this.narrator = new NarratorVoice();
+        this.bgMusic = new BackgroundMusic();
         this.typewriter = new Typewriter();
         this.transitioning = false;
         this.ambientStarted = false;
-        this.activeBgSlot = 'a'; // alternates between 'a' and 'b'
+        this.activeBgSlot = 'a';
 
-        // Cache elements
+        // Cache DOM
         this.bgA = document.getElementById('bg-image-a');
         this.bgB = document.getElementById('bg-image-b');
         this.overlay = document.getElementById('bg-overlay');
@@ -373,34 +570,23 @@ class StoryEngine {
         this.sceneCounter = document.getElementById('scene-current');
         this.scenes = document.querySelectorAll('.scene');
 
-        // Preload images
         this._preloadImages();
-
-        // Bind controls
         this._bindControls();
-
-        // Start
         this._startEntry();
     }
 
     _preloadImages() {
         const urls = new Set();
         SCENE_DATA.forEach(s => { if (s.bg) urls.add(s.bg); });
-        urls.forEach(url => {
-            const img = new Image();
-            img.src = url;
-        });
+        urls.forEach(url => { const img = new Image(); img.src = url; });
     }
 
     _bindControls() {
-        // Advance on click
         document.addEventListener('click', (e) => {
             if (e.target.closest('#advance-prompt') || !e.target.closest('a')) {
                 this._handleAdvance();
             }
         });
-
-        // Advance on spacebar / right arrow / enter
         document.addEventListener('keydown', (e) => {
             if (['Space', 'ArrowRight', 'Enter'].includes(e.code)) {
                 e.preventDefault();
@@ -410,23 +596,21 @@ class StoryEngine {
     }
 
     _handleAdvance() {
-        // If typewriter is active, skip it first
         if (this.typewriter.isTyping) {
             this.typewriter.skip();
             return;
         }
-
-        // Otherwise advance to next scene
+        if (this.narrator.isSpeaking) {
+            this.narrator.stop();
+            return;
+        }
         if (!this.transitioning) {
             this.nextScene();
         }
     }
 
     _startEntry() {
-        // Fade in from title screen
-        setTimeout(() => {
-            this.nextScene();
-        }, 500);
+        setTimeout(() => this.nextScene(), 500);
     }
 
     async nextScene() {
@@ -439,62 +623,69 @@ class StoryEngine {
             this.scenes[this.currentScene].classList.remove('active');
         }
 
-        // Advance
         this.currentScene++;
         const data = SCENE_DATA[this.currentScene];
-
-        // Update counter
         this.sceneCounter.textContent = this.currentScene + 1;
-
-        // Hide advance prompt during transition
         this.advancePrompt.classList.remove('visible');
 
-        // ── Set background ──
+        // Background
         this._setBackground(data.bg, data.kenBurns);
 
-        // ── Set overlay ──
+        // Overlay
         this.overlay.className = '';
         if (data.overlay) this.overlay.classList.add(data.overlay);
 
-        // ── Init audio on first interaction ──
+        // Init audio systems on first scene
         if (!this.ambientStarted) {
-            this.audio.init();
-            this.audio.startAmbient();
+            this.sfx.init();
+            this.sfx.startAmbient();
+            this.bgMusic.start();
             this.ambientStarted = true;
         }
 
-        // ── Play audio cue ──
-        if (data.audio === 'heartbeat') this.audio.playHeartbeat();
-        if (data.audio === 'birth') this.audio.playBirthChime();
-        if (data.audio === 'chapter') this.audio.playChapterReveal();
-        if (data.audio === 'system') this.audio.playSystemBoot();
+        // SFX cues
+        if (data.audio === 'heartbeat') this.sfx.playHeartbeat();
+        if (data.audio === 'birth') this.sfx.playBirthChime();
+        if (data.audio === 'chapter') this.sfx.playChapterReveal();
+        if (data.audio === 'system') this.sfx.playSystemBoot();
 
-        // ── Show new scene ──
-        await this._sleep(400); // brief darkness between scenes
+        // Show scene
+        await this._sleep(400);
         const sceneEl = this.scenes[this.currentScene];
         sceneEl.classList.add('active');
 
-        // ── Handle specials ──
-        if (data.special === 'heartbeat') {
-            this._runHeartbeatEffect();
-        }
-        if (data.special === 'system') {
-            await this._runSystemReveal();
-        }
-        if (data.special === 'playercard') {
-            await this._runPlayerCard();
-        }
+        // Special behaviors
+        if (data.special === 'heartbeat') this._runHeartbeatEffect();
+        if (data.special === 'system') await this._runSystemReveal();
+        if (data.special === 'playercard') await this._runPlayerCard();
 
-        // ── Run typewriter if needed ──
+        // ── TYPEWRITER + VOICE NARRATION (the key feature) ──
         if (data.typewriter) {
             const twEl = sceneEl.querySelector('[data-typewriter]');
             if (twEl) {
                 await this._sleep(800);
-                await this.typewriter.type(twEl, 30);
+
+                if (data.speak) {
+                    // Duck background music for clarity
+                    this.bgMusic.duck();
+
+                    // Start typewriter and voice narration simultaneously
+                    const typePromise = this.typewriter.type(twEl, 30);
+                    const speakPromise = this.narrator.speak(data.speak);
+
+                    // Wait for BOTH to finish (speech is usually longer)
+                    await Promise.all([typePromise, speakPromise]);
+
+                    // Raise background music back
+                    this.bgMusic.unduck();
+                } else {
+                    // No speech — just typewriter
+                    await this.typewriter.type(twEl, 30);
+                }
             }
         }
 
-        // ── Auto-advance or show prompt ──
+        // Auto-advance or show prompt
         if (data.autoAdvance) {
             await this._sleep(data.autoAdvance);
             this.transitioning = false;
@@ -502,66 +693,48 @@ class StoryEngine {
             return;
         }
 
-        // Show advance prompt
         await this._sleep(600);
         this.advancePrompt.classList.add('visible');
         this.transitioning = false;
     }
 
-    // ── Background crossfade with Ken Burns ──
     _setBackground(url, kenBurns) {
         if (!url) {
-            // No bg — fade both out
             this.bgA.classList.remove('active');
             this.bgB.classList.remove('active');
             return;
         }
-
-        // Alternate between A and B for crossfade
         const incoming = this.activeBgSlot === 'a' ? this.bgB : this.bgA;
         const outgoing = this.activeBgSlot === 'a' ? this.bgA : this.bgB;
-
-        // Remove old Ken Burns
         incoming.className = 'bg-image';
         incoming.style.backgroundImage = `url(${url})`;
-
-        // Apply Ken Burns
         if (kenBurns) incoming.classList.add(kenBurns);
-
-        // Crossfade
         incoming.classList.add('active');
         outgoing.classList.remove('active');
-
-        // Swap slot
         this.activeBgSlot = this.activeBgSlot === 'a' ? 'b' : 'a';
     }
 
-    // ── Heartbeat visual effect ──
     _runHeartbeatEffect() {
         const ring = document.getElementById('heartbeat-visual');
         if (!ring) return;
-        const beats = [0, 200, 1200, 1400, 2400, 2600, 3600, 3800];
-        beats.forEach(delay => {
+        [0, 200, 1200, 1400, 2400, 2600, 3600, 3800].forEach(delay => {
             setTimeout(() => {
                 ring.classList.remove('beat');
-                void ring.offsetWidth; // force reflow
+                void ring.offsetWidth;
                 ring.classList.add('beat');
             }, delay);
         });
     }
 
-    // ── System reveal (lines appear one by one) ──
     async _runSystemReveal() {
         const lines = document.querySelectorAll('#scene-system .sys-line');
         for (const line of lines) {
-            const delay = parseInt(line.getAttribute('data-delay')) || 0;
-            await this._sleep(delay > 0 ? 600 : 400);
+            await this._sleep(600);
             line.classList.add('visible');
         }
         await this._sleep(1000);
     }
 
-    // ── Player card stats animation ──
     async _runPlayerCard() {
         await this._sleep(600);
         const rows = document.querySelectorAll('.pc-row');
@@ -569,14 +742,12 @@ class StoryEngine {
             await this._sleep(350);
             rows[i].classList.add('visible');
         }
-        // XP bar
         await this._sleep(500);
         const xpFill = document.querySelector('.pc-xp-fill');
         if (xpFill) xpFill.classList.add('animate');
         await this._sleep(800);
     }
 
-    // ── Utility ──
     _sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
