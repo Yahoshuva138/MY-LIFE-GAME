@@ -1,0 +1,633 @@
+/* ═══════════════════════════════════════════════════════════
+   YAHOSHUVA: ORIGIN ZERO — Official Codex & Story Bible Styles
+   ═══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #07070d;
+    color: #e5dec9;
+    font-family: 'Rajdhani', sans-serif;
+    overflow: hidden;
+}
+
+/* App Container */
+#codex-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle at 50% 10%, #121226 0%, #06060c 100%);
+}
+
+/* Header */
+#codex-header {
+    height: 60px;
+    background: rgba(10, 10, 20, 0.95);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    z-index: 10;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.game-tag {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #c9a84c;
+}
+
+.header-sep {
+    color: rgba(201, 168, 76, 0.3);
+}
+
+.codex-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(229, 222, 201, 0.6);
+}
+
+.nav-links {
+    display: flex;
+    gap: 16px;
+}
+
+.nav-btn {
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #c9a84c;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    padding: 6px 14px;
+    transition: all 0.25s ease;
+    background: rgba(201, 168, 76, 0.05);
+}
+
+.nav-btn:hover {
+    background: #c9a84c;
+    color: #07070d;
+    box-shadow: 0 0 15px rgba(201, 168, 76, 0.4);
+}
+
+/* Main Layout */
+#codex-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar */
+#codex-sidebar {
+    width: 290px;
+    background: rgba(8, 8, 16, 0.9);
+    border-right: 1px solid rgba(201, 168, 76, 0.15);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+}
+
+.sidebar-section-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(201, 168, 76, 0.4);
+    margin-bottom: 12px;
+    padding-left: 8px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: rgba(229, 222, 201, 0.7);
+    padding: 12px 14px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background: rgba(201, 168, 76, 0.08);
+    color: #fff;
+    border-color: rgba(201, 168, 76, 0.2);
+}
+
+.tab-btn.active {
+    background: rgba(201, 168, 76, 0.15);
+    border-color: rgba(201, 168, 76, 0.5);
+    color: #f7e7b5;
+    box-shadow: inset 3px 0 0 #c9a84c;
+}
+
+.tab-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(201, 168, 76, 0.6);
+}
+
+/* Main Pane */
+#codex-main {
+    flex: 1;
+    padding: 40px 60px;
+    overflow-y: auto;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pane-header {
+    margin-bottom: 28px;
+}
+
+.section-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #c9a84c;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.pane-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: #f5eedb;
+}
+
+.gold-rule {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, #c9a84c, transparent);
+    margin-top: 10px;
+}
+
+/* Hero Box */
+.quote-hero-box {
+    background: rgba(201, 168, 76, 0.05);
+    border-left: 3px solid #c9a84c;
+    padding: 24px 30px;
+    margin-bottom: 30px;
+    border-radius: 0 4px 4px 0;
+}
+
+.quote-hero {
+    font-size: 20px;
+    font-style: italic;
+    color: #f5e4ba;
+    line-height: 1.6;
+}
+
+.quote-caption {
+    display: block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(201, 168, 76, 0.7);
+    margin-top: 8px;
+}
+
+/* Grids */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.grid-4-col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.info-card {
+    background: rgba(16, 16, 30, 0.7);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    padding: 24px;
+}
+
+.card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 17px;
+    letter-spacing: 2px;
+    color: #c9a84c;
+    margin-bottom: 14px;
+}
+
+.card-desc {
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(229, 222, 201, 0.85);
+}
+
+.clean-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.clean-list li {
+    font-size: 14px;
+    color: rgba(229, 222, 201, 0.85);
+}
+
+.clean-list strong {
+    color: #c9a84c;
+}
+
+/* Evolution Tree */
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.tree-node {
+    width: 100%;
+    background: rgba(15, 15, 28, 0.85);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    padding: 20px 24px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.tree-node:hover {
+    transform: scale(1.02);
+    border-color: #c9a84c;
+}
+
+.node-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #c9a84c;
+    margin-bottom: 6px;
+}
+
+.node-title {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.node-desc {
+    font-size: 14px;
+    color: rgba(229, 222, 201, 0.8);
+    line-height: 1.6;
+}
+
+.tree-split-arrow, .tree-converge-arrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(201, 168, 76, 0.5);
+    margin: 4px 0;
+}
+
+.tree-branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.master-node {
+    border-color: rgba(201, 168, 76, 0.6);
+    background: rgba(30, 25, 15, 0.4);
+    box-shadow: 0 0 25px rgba(201, 168, 76, 0.15);
+}
+
+/* Timeline */
+.level-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.timeline-item {
+    display: flex;
+    background: rgba(12, 12, 22, 0.7);
+    border-left: 2px solid rgba(201, 168, 76, 0.3);
+    padding: 16px 20px;
+    gap: 20px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.timeline-item:hover {
+    background: rgba(20, 20, 36, 0.85);
+    border-left-color: #c9a84c;
+}
+
+.tl-left {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: #c9a84c;
+    width: 80px;
+    flex-shrink: 0;
+    letter-spacing: 2px;
+    padding-top: 2px;
+}
+
+.tl-body h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: #f7eecf;
+    margin-bottom: 6px;
+}
+
+.tl-body p {
+    font-size: 14px;
+    color: rgba(229, 222, 201, 0.8);
+    line-height: 1.6;
+}
+
+/* Dimensions */
+.dimension-box {
+    background: rgba(14, 14, 26, 0.8);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    padding: 24px;
+}
+
+.dim-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #c9a84c;
+    margin-bottom: 6px;
+}
+
+.dim-name {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.dim-sub {
+    font-size: 13px;
+    color: rgba(229, 222, 201, 0.7);
+    margin-bottom: 16px;
+}
+
+.dim-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.dim-pill {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border: 1px solid rgba(229, 222, 201, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(229, 222, 201, 0.8);
+}
+
+.dim-pill.gold {
+    border-color: #c9a84c;
+    color: #f5eedb;
+    background: rgba(201, 168, 76, 0.1);
+}
+
+.dim-pill.red {
+    border-color: #d9534f;
+    color: #ff9999;
+    background: rgba(217, 83, 79, 0.1);
+}
+
+.boss-card {
+    background: rgba(40, 15, 15, 0.4);
+    border: 1px solid rgba(217, 83, 79, 0.3);
+    padding: 16px;
+}
+
+.boss-alert {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: #ff6666;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.boss-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    color: #ffcccc;
+    margin-bottom: 6px;
+}
+
+.boss-desc {
+    font-size: 13px;
+    color: rgba(255, 220, 220, 0.8);
+    line-height: 1.5;
+}
+
+.language-stages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.lang-step {
+    font-size: 13px;
+    line-height: 1.6;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 10px 14px;
+    border-left: 2px solid rgba(201, 168, 76, 0.3);
+}
+
+.lang-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: #c9a84c;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.exam-eve-card {
+    background: rgba(20, 30, 45, 0.4);
+    border: 1px solid rgba(100, 150, 220, 0.3);
+    padding: 16px;
+}
+
+.eve-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: #88bbff;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.eve-desc {
+    font-size: 13px;
+    color: rgba(220, 235, 255, 0.8);
+    line-height: 1.5;
+}
+
+/* Quotes Table */
+.quotes-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(12, 12, 22, 0.7);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.quotes-table th {
+    background: rgba(20, 20, 35, 0.9);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #c9a84c;
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.quotes-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.quote-text {
+    font-style: italic;
+    color: #f7eecf;
+    font-weight: 500;
+}
+
+.badge-real {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    background: rgba(50, 180, 100, 0.15);
+    color: #66ffaa;
+    border: 1px solid rgba(50, 180, 100, 0.3);
+}
+
+.badge-prop {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    background: rgba(201, 168, 76, 0.15);
+    color: #ffd777;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+/* Engine Pillars */
+.pillar-card {
+    background: rgba(14, 14, 26, 0.8);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    padding: 20px;
+    text-align: center;
+}
+
+.pillar-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.pillar-title {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    color: #c9a84c;
+    margin-bottom: 8px;
+}
+
+.pillar-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(229, 222, 201, 0.75);
+}
+
+.next-step-box {
+    margin-top: 30px;
+    background: rgba(201, 168, 76, 0.05);
+    border: 1px solid rgba(201, 168, 76, 0.25);
+    padding: 24px 30px;
+}
+
+.ns-title {
+    font-family: 'Cinzel', serif;
+    font-size: 17px;
+    color: #c9a84c;
+    margin-bottom: 10px;
+}
+
+.ns-desc {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    color: rgba(229, 222, 201, 0.85);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    #codex-body {
+        flex-direction: column;
+    }
+    #codex-sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    .grid-2-col, .grid-4-col {
+        grid-template-columns: 1fr;
+    }
+    .tree-branches {
+        grid-template-columns: 1fr;
+    }
+    #codex-main {
+        padding: 24px;
+    }
+}
