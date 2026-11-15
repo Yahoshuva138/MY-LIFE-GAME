@@ -1,14 +1,14 @@
 /* ═══════════════════════════════════════════════════════════════
    YAHOSHUVA: ORIGIN ZERO — Storyline 01 Engine
-   WITH FULL VOICE NARRATION & MOTIVATIONAL BACKGROUND AUDIO
+   WITH FULL VOICE NARRATION & CINEMATIC AUDIO
    
    Voice System:
    ─────────────
    • Web Speech API narrates every text scene
-   • Deep, slow, clear delivery (rate 0.72, pitch 0.85)
-   • Words spoken in sync with typewriter text
-   • Peter Dinklage motivational speech plays as atmospheric BG
-   • Background audio fades during narration, rises between scenes
+   • Deep, slow, clear delivery (rate 0.68, pitch 0.82)
+   • Enhanced pauses and natural pacing
+   • "Fail Better" audio clip plays ONLY at the END CARD (Scene 15)
+   • Procedural ambient soundscape throughout
    ═══════════════════════════════════════════════════════════════ */
 
 // ── Scene Configuration ──
@@ -125,11 +125,12 @@ const SCENE_DATA = [
         typewriter: true,
         speak: 'He didn\'t know what life had planned for him. He didn\'t know about the challenges, failures, friendships, victories, or worlds he would discover. ... He was just beginning. ... And this, was only, Level One.',
     },
-    // 15 — END CARD
+    // 15 — END CARD + "FAIL BETTER" AUDIO CLIP
     {
         bg: 'https://images.openai.com/static-rsc-4/GzeA6lJLJqbFTwxQNkOzYN3x03J3jvpvzh36MnqrWzum8jmhksSUuBk7KPKLyBnhnGaKnYOftwgwiCLs5-PBu7uCa0ziypNDGbvIg8PxR6_2jIdOFSNfRIIAcOal94MdQBCFHouBNiWC3N6pej6tvA3InoVwuwWWLfzVx3hyKgM?purpose=inline',
         overlay: 'darkest',
         kenBurns: 'ken-burns-out',
+        special: 'failbetter',
     },
 ];
 
@@ -230,10 +231,10 @@ class NarratorVoice {
         return new Promise((resolve) => {
             const utterance = new SpeechSynthesisUtterance(text);
 
-            // Deep, slow, clear, motivational voice settings
-            utterance.rate = 0.72;      // Slow and deliberate
-            utterance.pitch = 0.85;     // Deep tone
-            utterance.volume = 1.0;     // Full volume
+            // ── ENHANCED VOICE — smoother, slower, more cinematic ──
+            utterance.rate = 0.68;      // Even slower — more cinematic weight
+            utterance.pitch = 0.82;     // Slightly deeper
+            utterance.volume = 1.0;
             if (this.voice) utterance.voice = this.voice;
 
             this.isSpeaking = true;
@@ -289,60 +290,29 @@ class NarratorVoice {
 
 
 // ═══════════════════════════════════════════════════════
-// BACKGROUND MUSIC (extracted motivational speech audio)
-// Plays quietly, ducks when narrator speaks
+// CLIMAX AUDIO PLAYER ("FAIL BETTER" QUOTE ONLY)
+// Plays the clean, smooth Peter Dinklage quote at Scene 15
 // ═══════════════════════════════════════════════════════
-class BackgroundMusic {
+class FailBetterPlayer {
     constructor() {
-        this.audio = new Audio('AUDIO/motivational_bg.mp3');
-        this.audio.loop = true;
-        this.audio.volume = 0;
-        this.targetVolume = 0.12;   // Quiet atmospheric layer
-        this.duckVolume = 0.03;     // Ducked during narration
-        this.fadeInterval = null;
+        this.audio = new Audio('AUDIO/fail_better_clip.mp3');
+        this.audio.volume = 0.9;
+        this.isPlaying = false;
     }
 
-    start() {
-        this.audio.play().catch(() => {
-            // Autoplay blocked — will start on next user interaction
-            const handler = () => {
-                this.audio.play();
-                document.removeEventListener('click', handler);
-                document.removeEventListener('keydown', handler);
-            };
-            document.addEventListener('click', handler);
-            document.addEventListener('keydown', handler);
+    play() {
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        this.audio.currentTime = 0;
+        this.audio.play().catch(e => {
+            console.warn('[AUDIO] Playback prevented by browser policy:', e);
         });
-        this._fadeTo(this.targetVolume, 3000);
     }
 
-    // Duck the music when narrator speaks
-    duck() {
-        this._fadeTo(this.duckVolume, 800);
-    }
-
-    // Raise music between narration
-    unduck() {
-        this._fadeTo(this.targetVolume, 1200);
-    }
-
-    _fadeTo(target, duration) {
-        if (this.fadeInterval) clearInterval(this.fadeInterval);
-        const steps = 30;
-        const stepTime = duration / steps;
-        const stepSize = (target - this.audio.volume) / steps;
-        let step = 0;
-
-        this.fadeInterval = setInterval(() => {
-            step++;
-            this.audio.volume = Math.max(0, Math.min(1,
-                this.audio.volume + stepSize
-            ));
-            if (step >= steps) {
-                clearInterval(this.fadeInterval);
-                this.audio.volume = target;
-            }
-        }, stepTime);
+    stop() {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.isPlaying = false;
     }
 }
 
@@ -556,7 +526,7 @@ class StoryEngine {
         this.totalScenes = SCENE_DATA.length;
         this.sfx = new SFXEngine();
         this.narrator = new NarratorVoice();
-        this.bgMusic = new BackgroundMusic();
+        this.failBetterPlayer = new FailBetterPlayer();
         this.typewriter = new Typewriter();
         this.transitioning = false;
         this.ambientStarted = false;
@@ -596,6 +566,9 @@ class StoryEngine {
     }
 
     _handleAdvance() {
+        if (this.failBetterPlayer && this.failBetterPlayer.isPlaying) {
+            this.failBetterPlayer.stop();
+        }
         if (this.typewriter.isTyping) {
             this.typewriter.skip();
             return;
@@ -639,7 +612,6 @@ class StoryEngine {
         if (!this.ambientStarted) {
             this.sfx.init();
             this.sfx.startAmbient();
-            this.bgMusic.start();
             this.ambientStarted = true;
         }
 
@@ -658,6 +630,12 @@ class StoryEngine {
         if (data.special === 'heartbeat') this._runHeartbeatEffect();
         if (data.special === 'system') await this._runSystemReveal();
         if (data.special === 'playercard') await this._runPlayerCard();
+        if (data.special === 'failbetter') {
+            await this._sleep(500);
+            this.failBetterPlayer.play();
+            const quoteBox = document.getElementById('failbetter-quote-box');
+            if (quoteBox) quoteBox.classList.add('visible');
+        }
 
         // ── TYPEWRITER + VOICE NARRATION (the key feature) ──
         if (data.typewriter) {
@@ -666,18 +644,12 @@ class StoryEngine {
                 await this._sleep(800);
 
                 if (data.speak) {
-                    // Duck background music for clarity
-                    this.bgMusic.duck();
-
                     // Start typewriter and voice narration simultaneously
                     const typePromise = this.typewriter.type(twEl, 30);
                     const speakPromise = this.narrator.speak(data.speak);
 
-                    // Wait for BOTH to finish (speech is usually longer)
+                    // Wait for BOTH to finish
                     await Promise.all([typePromise, speakPromise]);
-
-                    // Raise background music back
-                    this.bgMusic.unduck();
                 } else {
                     // No speech — just typewriter
                     await this.typewriter.type(twEl, 30);

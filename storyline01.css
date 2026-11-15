@@ -717,6 +717,60 @@ html, body {
 
 .end-spacer { height: 40px; }
 
+/* ═══ FAIL BETTER QUOTE CLIMAX (Plays with Audio) ═══ */
+.failbetter-quote-box {
+    margin: 24px auto 28px;
+    max-width: 580px;
+    padding: 20px 28px;
+    background: radial-gradient(circle at top, rgba(201, 168, 76, 0.12) 0%, rgba(10, 10, 15, 0.75) 100%);
+    border: 1px solid rgba(201, 168, 76, 0.35);
+    border-radius: 4px;
+    box-shadow: 0 0 35px rgba(201, 168, 76, 0.12), inset 0 0 20px rgba(201, 168, 76, 0.05);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+    transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1.5s ease;
+}
+
+.failbetter-quote-box.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: 0 0 50px rgba(201, 168, 76, 0.22), inset 0 0 30px rgba(201, 168, 76, 0.08);
+}
+
+.fb-quote-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: rgba(201, 168, 76, 0.65);
+    margin-bottom: 12px;
+}
+
+.fb-quote-text {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(16px, 2vw, 23px);
+    line-height: 1.6;
+    color: #f7eed8;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 20px rgba(201, 168, 76, 0.35);
+    margin: 0 0 12px;
+}
+
+.fb-quote-text span {
+    color: #e6b840;
+    text-shadow: 0 0 25px rgba(230, 184, 64, 0.6);
+}
+
+.fb-quote-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(201, 168, 76, 0.45);
+    text-transform: uppercase;
+}
+
 .end-continued {
     font-family: 'Rajdhani', sans-serif;
     font-weight: 500;
